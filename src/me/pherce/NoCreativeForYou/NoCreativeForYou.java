@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class NoCreativeForYou extends JavaPlugin implements Listener {
 	
+	final String BYPASS_PERM = "noCreativeForYou.bypass";
 	
 	@Override
 	public void onEnable() {
@@ -27,15 +28,18 @@ public class NoCreativeForYou extends JavaPlugin implements Listener {
     @EventHandler
 	public void gameModeSwitch(PlayerGameModeChangeEvent event){
     	Player player = (Player)event.getPlayer();
-    	String banned = player.getDisplayName();
-		if(player.getGameMode() == GameMode.SURVIVAL && !player.isOp()){
+    	
+    	if(player.hasPermission(BYPASS_PERM) || player.isOp())
+    		return;
+    	
+		if(event.getNewGameMode() == GameMode.CREATIVE){
 			event.setCancelled(true);
-			org.bukkit.Bukkit.banIP(player.getAddress().getAddress().getHostAddress());
+			this.getServer().banIP(player.getAddress().getAddress().getHostAddress());
 			player.setBanned(true);
         	player.kickPlayer("No hacking in Creative mode! NO SOUP FOR YOU!");
         	
-        	org.bukkit.Bukkit.getServer().broadcastMessage(ChatColor.RED.toString() + banned + " was banned for cheating in Creative Mode!");      	
-        	
+        	this.getServer().broadcastMessage(ChatColor.RED.toString() + 
+        			player.getDisplayName() + " was banned for cheating in Creative Mode!");
         }
     }
     
@@ -43,13 +47,17 @@ public class NoCreativeForYou extends JavaPlugin implements Listener {
     @EventHandler
 	public void playerJoin(PlayerJoinEvent event){
        	Player player = (Player)event.getPlayer();
-       	String banned = player.getDisplayName();
-		if(player.getGameMode() == GameMode.CREATIVE && !player.isOp()){
-			org.bukkit.Bukkit.banIP(player.getAddress().getAddress().getHostAddress());
+       	
+    	if(player.hasPermission(BYPASS_PERM) || player.isOp())
+    		return;
+       	
+		if(player.getGameMode() == GameMode.CREATIVE){
+			this.getServer().banIP(player.getAddress().getAddress().getHostAddress());
 			player.setBanned(true);
         	player.kickPlayer("No hacking in Creative mode! NO SOUP FOR YOU!");
         	
-        	org.bukkit.Bukkit.getServer().broadcastMessage(ChatColor.RED.toString() + banned + " was banned for cheating in Creative Mode!");      	
+        	this.getServer().broadcastMessage(ChatColor.RED.toString() + 
+        			player.getDisplayName() + " was banned for cheating in Creative Mode!");      	
         	
         }
     }

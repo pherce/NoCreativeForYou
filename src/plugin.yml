@@ -2,3 +2,7 @@ name: NoCreativeForYou
 main: me.pherce.NoCreativeForYou.NoCreativeForYou
 version: 1.0
 description: Bans non-op players if they toggle to Creative Mode, or if they join the server in Creative Mode.
+permissions:
+    noCreativeForYou.bypass:
+        description: Gives ability to bypass the gamemode change checks.
+        default: op
