@@ -28,7 +28,7 @@ public class NoCreativeForYou extends JavaPlugin implements Listener {
 	public void gameModeSwitch(PlayerGameModeChangeEvent event){
     	Player player = (Player)event.getPlayer();
     	String banned = player.getDisplayName();
-		if(player.getGameMode() == GameMode.SURVIVAL && !player.isOp()){
+		if(event.getNewGameMode()  == GameMode.CREATIVE && !player.isOp()){
 			event.setCancelled(true);
 			org.bukkit.Bukkit.banIP(player.getAddress().getAddress().getHostAddress());
 			player.setBanned(true);
